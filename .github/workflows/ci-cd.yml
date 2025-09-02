@@ -1,4 +1,4 @@
-name: Deploy to Elastic Beanstalk
+name: Deploy to Elastic Beanstalk with S3
 
 on:
   push:
@@ -24,13 +24,26 @@ jobs:
       - name: Build with Maven
         run: ./mvnw package
 
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v21
+      - name: Zip Deployment Package
+        run: zip -r my-java-app.zip target/my-java-app.jar
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: my-java-app
-          environment_name: My-java-app-env
-          version_label: ${{ github.sha }}
-          region: eu-central-1
-          deployment_package: target/my-java-app.jar
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Upload to S3
+        run: aws s3 cp my-java-app.zip s3://java-app-beanstalk-bucket/my-java-app-${{ github.sha }}.zip
+
+      - name: Deploy to Elastic Beanstalk from S3
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name my-java-app \
+            --version-label ${{ github.sha }} \
+            --source-bundle S3Bucket="java-app-beanstalk-bucket",S3Key="my-java-app-${{ github.sha }}.zip"
+          
+          aws elasticbeanstalk update-environment \
+            --environment-name My-java-app-env \
+            --version-label ${{ github.sha }}
