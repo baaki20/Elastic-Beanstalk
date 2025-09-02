@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Interactive App</title>
+    <title>Greeting</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
     <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
     <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
@@ -14,12 +14,8 @@
 </nav>
 <body>
 <div style="text-align: center; margin-top: 50px;">
-    <h2>Welcome!</h2>
-    <p>Please enter your name below:</p>
-    <form action="/greet" method="post">
-        <input type="text" name="userName" placeholder="Enter your name" required>
-        <button type="submit">Greet Me</button>
-    </form>
+    <h2 th:text="'Hello, ' + ${userName} + '!'">Hello, User!</h2>
+    <a href="/">Go Back</a>
 </div>
 </body>
 </html>

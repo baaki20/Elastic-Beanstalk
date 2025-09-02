@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Interactive App</title>
+    <title>Our Blog</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
     <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
     <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
@@ -13,13 +12,15 @@
     <a href="/posts">Blog</a>
 </nav>
 <body>
-<div style="text-align: center; margin-top: 50px;">
-    <h2>Welcome!</h2>
-    <p>Please enter your name below:</p>
-    <form action="/greet" method="post">
-        <input type="text" name="userName" placeholder="Enter your name" required>
-        <button type="submit">Greet Me</button>
-    </form>
+<div style="margin-left: 10%; margin-right: 10%;">
+    <h1 style="text-align: center;">Our Blog</h1>
+    <div th:each="post : ${posts}" style="border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 5px;">
+        <h2 th:text="${post.title}">Post Title</h2>
+        <p th:text="${post.content}">Post content goes here.</p>
+    </div>
+    <div style="text-align: center;">
+        <a href="/">Go Back to Home</a>
+    </div>
 </div>
 </body>
 </html>
