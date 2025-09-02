@@ -25,7 +25,9 @@ jobs:
         run: ./mvnw package
 
       - name: Zip Deployment Package
-        run: zip -r my-java-app.zip target/my-java-app.jar
+        run: |
+          cd target
+          zip -r ../my-java-app.zip my-java-app.jar
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
