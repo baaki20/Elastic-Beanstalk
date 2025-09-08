@@ -39,13 +39,19 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp my-java-app.zip s3://java-app-beanstalk-bucket/my-java-app-${{ github.sha }}.zip
 
-      - name: Deploy to Elastic Beanstalk from S3
+      - name: Deploy or update to Elastic Beanstalk from S3
         run: |
           aws elasticbeanstalk create-application-version \
             --application-name my-java-app \
             --version-label ${{ github.sha }} \
             --source-bundle S3Bucket="java-app-beanstalk-bucket",S3Key="my-java-app-${{ github.sha }}.zip"
           
+          # Attempt to update the environment, and if it fails, create a new one.
           aws elasticbeanstalk update-environment \
             --environment-name My-java-app-env \
+            --version-label ${{ github.sha }} || \
+          aws elasticbeanstalk create-environment \
+            --application-name my-java-app \
+            --environment-name My-java-app-env \
+            --solution-stack-name "64bit Amazon Linux 2023 v4.1.0 running Corretto 17" \
             --version-label ${{ github.sha }}
