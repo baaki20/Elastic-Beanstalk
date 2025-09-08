@@ -47,5 +47,5 @@ jobs:
             --source-bundle S3Bucket="java-app-beanstalk-bucket",S3Key="my-java-app-1-${{ github.sha }}.zip"
 
           aws elasticbeanstalk update-environment \
-            --environment-name My-java-app-env-1 \
+            --environment-name My-java-app-1-env \
             --version-label ${{ github.sha }}
